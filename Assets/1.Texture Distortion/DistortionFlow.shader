@@ -36,8 +36,8 @@
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2.0 - 1.0;
-            float2 uv = FlowUV(IN.uv_MainTex,flowVector, _Time.y);
-            float4 c = tex2D (_MainTex, uv) * _Color;
+            float2 uvw = FlowUVW(IN.uv_MainTex,flowVector, _Time.y);
+            float4 c = tex2D (_MainTex, uvw) * _Color;
             o.Albedo = c.rgb;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
