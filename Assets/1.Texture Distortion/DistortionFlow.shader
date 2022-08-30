@@ -4,7 +4,7 @@
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        [NoScaleOffset] _FlowMap ("Flow (RG)", 2D) = "black" {}
+        [NoScaleOffset] _FlowMap ("Flow (RG, A noise)", 2D) = "black" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
     }
@@ -36,7 +36,9 @@
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2.0 - 1.0;
-            float3 uvw = FlowUVW(IN.uv_MainTex,flowVector, _Time.y);
+            float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
+			float time = _Time.y + noise;
+            float3 uvw = FlowUVW(IN.uv_MainTex,flowVector, time);
             float4 c = tex2D (_MainTex, uvw.xy) * uvw.z * _Color;
             o.Albedo = c.rgb;
             o.Metallic = _Metallic;
