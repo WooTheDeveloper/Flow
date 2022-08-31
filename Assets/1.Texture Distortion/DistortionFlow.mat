@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FlowMap:
-        m_Texture: {fileID: 2800000, guid: 2c0e9c743d82fb446a34b7667b6ac16d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7b073a6ab8f796644a082db4d24411a6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -87,7 +87,7 @@ Material:
     - _SpecularHighlights: 1
     - _Speed: 0.5
     - _SrcBlend: 1
-    - _Tiling: 1
+    - _Tiling: 2
     - _UJump: 0.1
     - _UVSec: 0
     - _VJump: 0.1

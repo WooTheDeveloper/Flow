@@ -53,19 +53,22 @@
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2.0 - 1.0;
-            flowVector *= _FlowStrength;
+            //float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2.0 - 1.0;
+            float3 flow = tex2D(_FlowMap, IN.uv_MainTex).rgb;
+			flow.xy = flow.xy * 2 - 1;
+			flow *= _FlowStrength;
+            //flowVector *= _FlowStrength;
             float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
 			float time = _Time.y * _Speed + noise;   //用噪声对时间进行偏移
 			float2 jump = float2(_UJump, _VJump);
-            float3 uvwA = FlowUVW(IN.uv_MainTex,flowVector,jump,_FlowOffset,_Tiling, time,false);
-            float3 uvwB = FlowUVW(IN.uv_MainTex,flowVector,jump,_FlowOffset,_Tiling, time,true); //flowB 的相位相对于A偏移了0.5，查看波形图，flowA + flowB 的和永远为1，即他们的比重之和为1，这就避免了之前的变黑
+            float3 uvwA = FlowUVW(IN.uv_MainTex,flow.xy,jump,_FlowOffset,_Tiling, time,false);
+            float3 uvwB = FlowUVW(IN.uv_MainTex,flow.xy,jump,_FlowOffset,_Tiling, time,true); //flowB 的相位相对于A偏移了0.5，查看波形图，flowA + flowB 的和永远为1，即他们的比重之和为1，这就避免了之前的变黑
             
             //法线
             //float3 normalA = UnpackNormal(tex2D(_NormalMap, uvwA.xy)) * uvwA.z;
 			//float3 normalB = UnpackNormal(tex2D(_NormalMap, uvwB.xy)) * uvwB.z;
 			//o.Normal = normalize(normalA + normalB);
-			float finalHeightScale = length(flowVector) * _HeightScaleModulated + _HeightScale;
+			float finalHeightScale = flow.z * _HeightScaleModulated + _HeightScale;
             float3 dhA = UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwA.xy)) * (uvwA.z * finalHeightScale);
 			float3 dhB = UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwB.xy)) * (uvwB.z * finalHeightScale);
 			o.Normal = normalize(float3(-(dhA.xy + dhB.xy), 1));//The resulting surface normals look almost the same as when using the normal map, they're just cheaper to compute
