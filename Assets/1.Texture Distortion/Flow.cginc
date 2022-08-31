@@ -1,12 +1,8 @@
 #if !defined(FLOW_INCLUDED)
 #define FLOW_INCLUDED
 
-#define TEST_SLOW_DOWN  0.3;
-
 //获取偏移后的uv和权重
 float3 FlowUVW  (float2 uv,float2 flowVector,float2 jump,float tiling,float time, bool flowB) {
-    
-    time *= TEST_SLOW_DOWN; //自测时，给时间减速
     
     float phaseOffset = flowB ? 0.5 : 0;    //周期1
     float progress = frac(time  + phaseOffset); //B波相对于A波偏移半个周期 0.5
