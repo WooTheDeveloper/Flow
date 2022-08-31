@@ -12,6 +12,7 @@
 		_Tiling ("Tiling", Float) = 1
 		_Speed ("Speed", Float) = 1
 		_FlowStrength ("Flow Strength", Float) = 1
+		_FlowOffset ("Flow Offset", Float) = 0
     }
     SubShader
     {
@@ -34,7 +35,7 @@
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        float _UJump, _VJump, _Tiling, _Speed, _FlowStrength;
+        float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
 
         UNITY_INSTANCING_BUFFER_START(Props)
         UNITY_INSTANCING_BUFFER_END(Props)
@@ -46,8 +47,8 @@
             float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
 			float time = _Time.y * _Speed + noise;   //用噪声对时间进行偏移
 			float2 jump = float2(_UJump, _VJump);
-            float3 uvwA = FlowUVW(IN.uv_MainTex,flowVector,jump,_Tiling, time,false);
-            float3 uvwB = FlowUVW(IN.uv_MainTex,flowVector,jump,_Tiling, time,true); //flowB 的相位相对于A偏移了0.5，查看波形图，flowA + flowB 的和永远为1，即他们的比重之和为1，这就避免了之前的变黑
+            float3 uvwA = FlowUVW(IN.uv_MainTex,flowVector,jump,_FlowOffset,_Tiling, time,false);
+            float3 uvwB = FlowUVW(IN.uv_MainTex,flowVector,jump,_FlowOffset,_Tiling, time,true); //flowB 的相位相对于A偏移了0.5，查看波形图，flowA + flowB 的和永远为1，即他们的比重之和为1，这就避免了之前的变黑
             float4 texA = tex2D(_MainTex, uvwA.xy) * uvwA.z;
 			float4 texB = tex2D(_MainTex, uvwB.xy) * uvwB.z;
             float4 c = (texA + texB) * _Color;
