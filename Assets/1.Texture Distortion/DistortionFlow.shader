@@ -11,6 +11,7 @@
 		_VJump ("V jump per phase", Range(-0.25, 0.25)) = 0.25
 		_Tiling ("Tiling", Float) = 1
 		_Speed ("Speed", Float) = 1
+		_FlowStrength ("Flow Strength", Float) = 1
     }
     SubShader
     {
@@ -33,7 +34,7 @@
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        float _UJump, _VJump, _Tiling, _Speed;
+        float _UJump, _VJump, _Tiling, _Speed, _FlowStrength;
 
         UNITY_INSTANCING_BUFFER_START(Props)
         UNITY_INSTANCING_BUFFER_END(Props)
@@ -41,6 +42,7 @@
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2.0 - 1.0;
+            flowVector *= _FlowStrength;
             float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
 			float time = _Time.y * _Speed + noise;   //用噪声对时间进行偏移
 			float2 jump = float2(_UJump, _VJump);
