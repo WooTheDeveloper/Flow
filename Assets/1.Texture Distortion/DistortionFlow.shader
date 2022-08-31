@@ -81,7 +81,7 @@
             float4 c = (texA + texB) * _Color;
             
             o.Albedo = c.rgb;
-            o.Albedo = pow(dhA.z + dhB.z, 2);   //用于Debug水的高度
+            //o.Albedo = pow(dhA.z + dhB.z, 2);   //用于Debug水的高度
             o.Metallic = 0;
             o.Smoothness = _Glossiness;
             o.Alpha = 1;
